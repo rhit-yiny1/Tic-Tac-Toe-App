@@ -56,9 +56,15 @@ class _MyHomePageState extends State<MyHomePage> {
       buttons.add(ElevatedButton(
         onPressed: () {
           print("You pressed button number $k");
+          setState(() {
+            game.pressedSquare(k);
+          });
+          print("new state == $game");
         },
         child: Text(
-          "X",
+          (game.board[k] == TicTacToeMark.x)
+              ? "X"
+              : ((game.board[k] == TicTacToeMark.o) ? "O" : " "),
           style: TextStyle(fontSize: 90.0),
         ),
       ));
@@ -68,25 +74,49 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              this.gameStateString,
-              style: Theme.of(context).textTheme.headline4,
-            ),
-            Expanded(
-              child: GridView.count(
-                primary: false,
-                physics: const NeverScrollableScrollPhysics(),
-                padding: const EdgeInsets.all(20),
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-                crossAxisCount: 3,
-                children: buttons,
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 500.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                this.gameStateString,
+                style: Theme.of(context).textTheme.headline4,
               ),
-            )
-          ],
+              Flexible(
+                fit: FlexFit.tight,
+                flex: 4,
+                child: Container(
+                  constraints: const BoxConstraints(maxWidth: 500.0),
+                  child: GridView.count(
+                    childAspectRatio: 1 / 1,
+                    primary: false,
+                    physics: const NeverScrollableScrollPhysics(),
+                    padding: const EdgeInsets.all(20),
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    crossAxisCount: 3,
+                    children: buttons,
+                  ),
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      setState(() {
+                        game = TicTacToeGame();
+                      });
+                    },
+                    child: const Text("New Game",
+                        style: TextStyle(fontSize: 30.0)),
+                  ),
+                  SizedBox(width: 20.0),
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
