@@ -51,23 +51,38 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final buttons = <ElevatedButton>[];
+    final buttons = <Widget>[];
     for (var k = 0; k < 9; k++) {
-      buttons.add(ElevatedButton(
-        onPressed: () {
-          print("You pressed button number $k");
+      var filename = "blank.png";
+      if (game.board[k] == TicTacToeMark.x) {
+        filename = "x.png";
+      } else if (game.board[k] == TicTacToeMark.o) {
+        filename = "o.png";
+      }
+      buttons.add(InkWell(
+        onTap: () {
           setState(() {
             game.pressedSquare(k);
           });
-          print("new state == $game");
         },
-        child: Text(
-          (game.board[k] == TicTacToeMark.x)
-              ? "X"
-              : ((game.board[k] == TicTacToeMark.o) ? "O" : " "),
-          style: TextStyle(fontSize: 90.0),
-        ),
+        child: Image.asset("assets/images/$filename"),
       ));
+      //   ElevatedButton(
+      //   onPressed: () {
+      //     print("You pressed button number $k");
+      //     setState(() {
+      //       game.pressedSquare(k);
+      //     });
+      //     print("new state == $game");
+      //   },
+      //   // child: Text(
+      //   //   (game.board[k] == TicTacToeMark.x)
+      //   //       ? "X"
+      //   //       : ((game.board[k] == TicTacToeMark.o) ? "O" : " "),
+      //   //   style: TextStyle(fontSize: 90.0),
+      //   // ),
+      //   child: Image.asset("assets/images/x.png"),
+      // )
     }
     return Scaffold(
       appBar: AppBar(
@@ -81,22 +96,29 @@ class _MyHomePageState extends State<MyHomePage> {
             children: <Widget>[
               Text(
                 this.gameStateString,
-                style: Theme.of(context).textTheme.headline4,
+                style: Theme.of(context).textTheme.headline2,
+              ),
+              const SizedBox(
+                height: 15.0,
               ),
               Flexible(
                 fit: FlexFit.tight,
                 flex: 4,
                 child: Container(
                   constraints: const BoxConstraints(maxWidth: 500.0),
-                  child: GridView.count(
-                    childAspectRatio: 1 / 1,
-                    primary: false,
-                    physics: const NeverScrollableScrollPhysics(),
-                    padding: const EdgeInsets.all(20),
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                    crossAxisCount: 3,
-                    children: buttons,
+                  child: Stack(
+                    children: [
+                      Image.asset("assets/images/board.png"),
+                      GridView.count(
+                        primary: false,
+                        physics: const NeverScrollableScrollPhysics(),
+                        padding: const EdgeInsets.all(20),
+                        crossAxisSpacing: 30,
+                        mainAxisSpacing: 30,
+                        crossAxisCount: 3,
+                        children: buttons,
+                      )
+                    ],
                   ),
                 ),
               ),
